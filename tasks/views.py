@@ -8,6 +8,9 @@ from django.contrib.auth.models import User
 from .models import Task
 from .serializers import TaskSerializer, UserSerializer
 from .permissions import IsOwner
+from .models import Task, Category
+from .serializers import TaskSerializer, UserSerializer, CategorySerializer
+from rest_framework import generics, permissions
 
 # -----------------------------
 # User API
@@ -62,3 +65,24 @@ class TaskViewSet(viewsets.ModelViewSet):
         task.completed_at = None
         task.save()
         return Response({'status': 'task marked as incomplete'})
+    
+# -----------------------------
+# Category API
+# -----------------------------
+class CategoryViewSet(viewsets.ModelViewSet):
+
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        return Category.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class RegisterView(generics.CreateAPIView):
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]

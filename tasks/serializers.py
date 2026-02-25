@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Task
+from .models import Task, Category
 from django.utils import timezone
+
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -42,3 +43,10 @@ class TaskSerializer(serializers.ModelSerializer):
         elif validated_data.get('status') == 'Pending':
             instance.completed_at = None
         return super().update(instance, validated_data)
+    
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = '__all__'
+        read_only_fields = ['user']
