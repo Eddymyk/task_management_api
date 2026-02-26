@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 from .models import Task, Category
 from django.utils import timezone
 
-
+# -----------------------------
+# User Serializer
+# -----------------------------
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
@@ -12,13 +14,17 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'password']
 
     def create(self, validated_data):
+        # Use Django's built-in create_user to hash password
         user = User.objects.create_user(
             username=validated_data['username'],
-            email=validated_data['email'],
+            email=validated_data.get('email', ''),
             password=validated_data['password']
         )
         return user
 
+# -----------------------------
+# Task Serializer
+# -----------------------------
 class TaskSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
 
@@ -32,8 +38,8 @@ class TaskSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
+        # Prevent editing completed tasks except for status change
         if instance.status == 'Completed' and validated_data.get('status') != 'Pending':
-            # Prevent editing completed task unless reverted
             for key in validated_data:
                 if key not in ['status', 'completed_at']:
                     raise serializers.ValidationError("Cannot edit completed task.")
@@ -43,10 +49,11 @@ class TaskSerializer(serializers.ModelSerializer):
         elif validated_data.get('status') == 'Pending':
             instance.completed_at = None
         return super().update(instance, validated_data)
-    
-class CategorySerializer(serializers.ModelSerializer):
 
+# -----------------------------
+# Category Serializer
+# -----------------------------
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
-        read_only_fields = ['user']

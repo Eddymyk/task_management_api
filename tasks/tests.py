@@ -50,7 +50,7 @@ class TaskAPITest(APITestCase):
     # -----------------------------
 
     def test_user_can_authenticate(self):
-        url = reverse("token_obtain_pair")
+        url = reverse("login")
 
         data = {
             "username": "testuser",
