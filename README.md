@@ -92,25 +92,38 @@ and manage tasks efficiently.
 ## API Endpoints
 
 ### Authentication
-
--   POST /api/register/
--   POST /api/login/
+Base URL: https://eddymyk.pythonanywhere.com/api
+Register a New User Endpoint: https://eddymyk.pythonanywhere.com/api/register/
+Login: https://eddymyk.pythonanywhere.com/api/login/
+username: "eddymyk"
+password: "Password123"
 
 ### Tasks
 
--   GET /api/tasks/
--   POST /api/tasks/
--   GET /api/tasks/{id}/
--   PUT /api/tasks/{id}/
--   DELETE /api/tasks/{id}/
+-   GET - /api/tasks/
+-   POST - /api/tasks/
+-   GET - /api/tasks/{id}/
+-   PUT - /api/tasks/{id}/
+-   DELETE - /api/tasks/{id}/
+
 
 ### Categories
 
 -   GET /api/categories/
 -   POST /api/categories/
 
+Example Task JSON
+{
+  "title": "Finish project",
+  "description": "Complete the API project",
+  "due_date": "2026-03-01T12:00:00Z",
+  "priority": "High",
+  "status": "Pending"
+}
 ------------------------------------------------------------------------
 
 ## Author
 
 Edidiong Archibong
+
+
